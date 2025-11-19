@@ -4,12 +4,13 @@ import { motion, AnimatePresence } from 'framer-motion'
 
 export default function Navbar() {
   const [open, setOpen] = useState(false)
+  const [hovered, setHovered] = useState(null)
 
   const navItems = [
     { label: 'Home', href: '#home' },
     { label: 'Services', href: '#services' },
     { label: 'Projects', href: '#projects' },
-    { label: 'About', href: '#about' },
+    { label: 'Our Work', href: '#work' },
     { label: 'Contact', href: '#contact' },
   ]
 
@@ -29,16 +30,35 @@ export default function Navbar() {
               </div>
             </a>
 
-            <nav className="hidden md:flex items-center gap-8">
-              {navItems.map((item) => (
-                <a key={item.label} href={item.href} className="text-sm text-white/70 hover:text-white transition-colors">
+            <nav className="hidden md:flex items-center gap-6">
+              {navItems.map((item, idx) => (
+                <motion.a
+                  key={item.label}
+                  href={item.href}
+                  onMouseEnter={() => setHovered(idx)}
+                  onMouseLeave={() => setHovered(null)}
+                  className="relative px-1 text-sm text-white/70 transition-colors hover:text-white"
+                  whileHover={{ y: -1 }}
+                >
                   {item.label}
-                </a>
+                  {hovered === idx && (
+                    <motion.span
+                      layoutId="nav-underline"
+                      className="absolute -bottom-1 left-0 h-[2px] w-full rounded bg-red-500"
+                      transition={{ type: 'spring', stiffness: 500, damping: 30 }}
+                    />
+                  )}
+                </motion.a>
               ))}
-              <a href="#contact" className="inline-flex items-center gap-2 rounded-full bg-red-600 px-4 py-2 text-sm font-medium text-white shadow-lg shadow-red-600/30 transition hover:bg-red-500">
+              <motion.a
+                href="#contact"
+                whileHover={{ scale: 1.03 }}
+                whileTap={{ scale: 0.98 }}
+                className="inline-flex items-center gap-2 rounded-full bg-red-600 px-4 py-2 text-sm font-medium text-white shadow-lg shadow-red-600/30 transition hover:bg-red-500"
+              >
                 <Phone className="h-4 w-4" />
                 Free Quote
-              </a>
+              </motion.a>
             </nav>
 
             <button onClick={() => setOpen((v) => !v)} className="md:hidden inline-flex h-10 w-10 items-center justify-center rounded-lg border border-white/10 text-white/90">

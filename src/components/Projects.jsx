@@ -1,4 +1,5 @@
-import { motion } from 'framer-motion'
+import { motion, useScroll, useTransform } from 'framer-motion'
+import { useRef } from 'react'
 
 const projects = [
   { title: 'Modern Metal Roof', img: 'https://images.unsplash.com/photo-1604014237800-1c9102c3bb33?q=80&w=1640&auto=format&fit=crop', tag: 'Commercial' },
@@ -7,8 +8,13 @@ const projects = [
 ]
 
 export default function Projects() {
+  const ref = useRef(null)
+  const { scrollYProgress } = useScroll({ target: ref, offset: ['start end', 'end start'] })
+  const parallax = useTransform(scrollYProgress, [0, 1], [0, -100])
+
   return (
-    <section id="projects" className="relative bg-black py-24">
+    <section id="projects" ref={ref} className="relative bg-black py-24 overflow-hidden">
+      <motion.div style={{ y: parallax }} className="pointer-events-none absolute -left-24 top-10 h-72 w-72 rounded-full bg-red-600/10 blur-3xl" />
       <div className="relative mx-auto max-w-6xl px-6">
         <div className="mb-10">
           <h2 className="text-3xl md:text-4xl font-bold text-white">Recent Projects</h2>
